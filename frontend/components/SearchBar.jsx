@@ -37,12 +37,14 @@ export default function SearchBar({ onSearch }) {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search for a song..."
-                    className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-purple/30 text-white placeholder-white/50 focus:outline-none focus:border-purple text-base"
+                    className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-purple/30 placeholder-white/50 focus:outline-none focus:border-purple text-base"
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(139, 92, 246, 0.3)', color: '#ffffff' }}
                     disabled={isLoading}
                 />
                 <button
                     type="submit"
-                    className="px-3 py-3 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center min-w-[48px] w-12 h-12 flex-shrink-0 disabled:opacity-50"
+                    className="px-3 py-3 rounded-lg bg-purple font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center min-w-[48px] w-12 h-12 flex-shrink-0 disabled:opacity-50"
+                    style={{ backgroundColor: '#8b5cf6', color: '#ffffff' }}
                     title="Search"
                     disabled={isLoading}
                 >
@@ -70,7 +72,7 @@ export default function SearchBar({ onSearch }) {
                 </button>
             </div>
             {error && (
-                <p className="text-red-400 text-sm mt-2">{error}</p>
+                <p className="text-red-400 text-sm mt-2" style={{ color: '#f87171' }}>{error}</p>
             )}
         </form>
     );

@@ -16,12 +16,13 @@ export default function Home() {
 
 
     return (
-        <div className="min-h-screen p-4 md:p-8 bg-background text-white">
+        <div className="min-h-screen p-4 md:p-8" style={{ backgroundColor: '#0d001a', color: '#ffffff' }}>
             <div className="max-w-3xl mx-auto">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <h1 className="text-2xl md:text-3xl font-bold text-purple">Party Queue</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold" style={{ color: '#8b5cf6' }}>Party Queue</h1>
                     <button
-                        className="px-6 py-3 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors text-base min-w-[120px]"
+                        className="px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-colors text-base min-w-[120px]"
+                        style={{ backgroundColor: '#8b5cf6', color: '#ffffff' }}
                         onClick={createRoom}
                     >
                         Create Room
@@ -32,23 +33,27 @@ export default function Home() {
                 {roomId && (
                     <div className="mt-8 space-y-6">
                         {/* Regular User QR */}
-                        <div className="p-6 bg-white/5 rounded-2xl border border-purple/30 backdrop-blur-sm">
-                            <h2 className="text-lg md:text-xl font-semibold text-white mb-2">🎵 Regular Users - Scan to Join</h2>
-                            <p className="text-white/60 text-sm mb-4">Join the party and add songs to the queue</p>
+                        <div className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-lg md:text-xl font-semibold mb-2" style={{ color: '#ffffff' }}>🎵 Regular Users - Scan to Join</h2>
+                            <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Join the party and add songs to the queue</p>
                             <div className="flex justify-center">
-                                <QRCode value={`${frontendUrl}/room/${roomId}`} />
+                                <div className="p-4 rounded-lg border-4" style={{ borderColor: '#8b5cf6', backgroundColor: '#ffffff' }}>
+                                    <QRCode value={`${frontendUrl}/room/${roomId}`} />
+                                </div>
                             </div>
-                            <p className="mt-3 text-white/80 text-center">Room ID: <span className="text-purple font-semibold">{roomId}</span></p>
+                            <p className="mt-3 text-center" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Room ID: <span className="font-semibold" style={{ color: '#8b5cf6' }}>{roomId}</span></p>
                         </div>
 
                         {/* Admin QR */}
-                        <div className="p-6 bg-purple/10 rounded-2xl border border-purple/50 backdrop-blur-sm">
-                            <h2 className="text-lg md:text-xl font-semibold text-purple mb-2">👑 Admin/Host - Scan for Full Control</h2>
-                            <p className="text-purple/80 text-sm mb-4">Host controls: skip songs instantly, override limits, manage queue</p>
+                        <div className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', borderColor: 'rgba(139, 92, 246, 0.5)' }}>
+                            <h2 className="text-lg md:text-xl font-semibold mb-2" style={{ color: '#8b5cf6' }}>👑 Admin/Host - Scan for Full Control</h2>
+                            <p className="text-sm mb-4" style={{ color: 'rgba(139, 92, 246, 0.8)' }}>Host controls: skip songs instantly, override limits, manage queue</p>
                             <div className="flex justify-center">
-                                <QRCode value={`${frontendUrl}/room/${roomId}?admin=true`} />
+                                <div className="p-4 rounded-lg border-4" style={{ borderColor: '#8b5cf6', backgroundColor: '#ffffff' }}>
+                                    <QRCode value={`${frontendUrl}/room/${roomId}?admin=true`} />
+                                </div>
                             </div>
-                            <p className="mt-3 text-purple/80 text-center">Admin Link: <span className="text-white font-semibold">{roomId}?admin=true</span></p>
+                            <p className="mt-3 text-center" style={{ color: 'rgba(139, 92, 246, 0.8)' }}>Admin Link: <span className="font-semibold" style={{ color: '#ffffff' }}>{roomId}?admin=true</span></p>
                         </div>
                     </div>
                 )}
