@@ -16,7 +16,11 @@ export default function QueueList({ queue }) {
                 >
                     <div className="flex-1">
                         <h3 className="font-semibold text-silver">{song.title}</h3>
-                        <p className="text-sm text-silver/60">Added by: {song.user || 'Unknown'}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs bg-purpleAccent/20 text-purpleAccent px-2 py-1 rounded">
+                                {song.user || 'Unknown'}
+                            </span>
+                        </div>
                     </div>
                     <div className="text-purpleAccent font-semibold">
                         #{index + 1}

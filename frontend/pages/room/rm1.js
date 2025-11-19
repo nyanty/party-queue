@@ -16,6 +16,8 @@ export default function Room() {
     const [searchResults, setSearchResults] = useState([]);
     const [skipVotes, setSkipVotes] = useState({ voters: 0, userCount: 1 });
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [username, setUsername] = useState('');
+    const [showUsernamePrompt, setShowUsernamePrompt] = useState(true);
 
     useEffect(() => {
         if (!id) return;
@@ -24,7 +26,7 @@ export default function Room() {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         socket = io(backendUrl);
 
-        socket.emit('joinRoom', { roomId: id, username: 'Guest', isHost: false });
+        // Don't join room yet, wait for username
 
         socket.on('queueUpdated', (updatedQueue) => {
             setQueue(updatedQueue);
@@ -58,15 +60,24 @@ export default function Room() {
         setTimeout(() => setMessage({ text: '', type: '' }), 5000);
     };
 
+    const handleUsernameSubmit = (name) => {
+        if (!name.trim()) return;
+        setUsername(name.trim());
+        setShowUsernamePrompt(false);
+        if (socket) {
+            socket.emit('joinRoom', { roomId: id, username: name.trim(), isHost: false });
+        }
+    };
+
     const handleSearch = (results) => {
         setSearchResults(results.items || []);
     };
 
     const addToQueue = (song) => {
-        if (socket) {
+        if (socket && username) {
             socket.emit('addSong', {
                 roomId: id,
-                username: 'Guest',
+                username,
                 song: {
                     videoId: song.id.videoId,
                     title: song.snippet.title,
@@ -77,8 +88,8 @@ export default function Room() {
     };
 
     const handleVoteSkip = () => {
-        if (socket) {
-            socket.emit('voteSkip', { roomId: id, username: 'Guest' });
+        if (socket && username) {
+            socket.emit('voteSkip', { roomId: id, username });
         }
     };
 
@@ -90,6 +101,31 @@ export default function Room() {
 
     return (
         <div className="min-h-screen p-8 bg-background text-silver">
+            {/* Username Prompt Modal */}
+            {showUsernamePrompt && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-[#0d0d0d] p-8 rounded-2xl border border-purpleAccent/30 max-w-md w-full mx-4">
+                        <h2 className="text-2xl font-bold text-purpleAccent mb-4 text-center">Join the Party</h2>
+                        <p className="text-silver/60 mb-6 text-center">Enter your name to start adding songs!</p>
+                        <form onSubmit={(e) => { e.preventDefault(); handleUsernameSubmit(e.target.username.value); }}>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Your name"
+                                className="w-full px-4 py-3 rounded-lg bg-[#111] border border-purpleAccent/30 text-silver focus:outline-none focus:border-purpleAccent mb-4"
+                                autoFocus
+                            />
+                            <button
+                                type="submit"
+                                className="w-full px-6 py-3 rounded-lg bg-purpleAccent text-black font-semibold hover:bg-purpleAccent/90 transition-colors"
+                            >
+                                Join Room
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-purpleAccent">
@@ -133,15 +169,20 @@ export default function Room() {
                                     {searchResults.map((song) => (
                                         <div
                                             key={song.id.videoId}
-                                            className="p-3 bg-[#111] rounded-lg border border-purpleAccent/20 flex justify-between items-center"
+                                            className="p-3 bg-[#111] rounded-lg border border-purpleAccent/20 flex items-center gap-3 hover:border-purpleAccent/50 transition-colors"
                                         >
-                                            <div className="flex-1">
-                                                <h3 className="text-sm font-medium">{song.snippet.title}</h3>
-                                                <p className="text-xs text-silver/60">{song.snippet.channelTitle}</p>
+                                            <img
+                                                src={song.snippet.thumbnails.default.url}
+                                                alt={song.snippet.title}
+                                                className="w-12 h-12 rounded object-cover"
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-sm font-medium truncate">{song.snippet.title}</h3>
+                                                <p className="text-xs text-silver/60 truncate">{song.snippet.channelTitle}</p>
                                             </div>
                                             <button
                                                 onClick={() => addToQueue(song)}
-                                                className="px-3 py-1 text-sm rounded bg-purpleAccent text-black hover:bg-purpleAccent/90"
+                                                className="px-3 py-1 text-sm rounded bg-purpleAccent text-black hover:bg-purpleAccent/90 transition-colors"
                                             >
                                                 Add
                                             </button>
