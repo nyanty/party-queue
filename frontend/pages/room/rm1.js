@@ -100,24 +100,24 @@ export default function Room() {
     };
 
     return (
-        <div className="min-h-screen p-8 bg-background text-silver">
+        <div className="min-h-screen p-4 bg-background text-white md:p-8">
             {/* Username Prompt Modal */}
             {showUsernamePrompt && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-[#0d0d0d] p-8 rounded-2xl border border-purpleAccent/30 max-w-md w-full mx-4">
-                        <h2 className="text-2xl font-bold text-purpleAccent mb-4 text-center">Join the Party</h2>
-                        <p className="text-silver/60 mb-6 text-center">Enter your name to start adding songs!</p>
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-background p-6 rounded-2xl border border-purple/30 max-w-md w-full mx-4">
+                        <h2 className="text-2xl font-bold text-purple mb-4 text-center">Join the Party</h2>
+                        <p className="text-white/60 mb-6 text-center">Enter your name to start adding songs!</p>
                         <form onSubmit={(e) => { e.preventDefault(); handleUsernameSubmit(e.target.username.value); }}>
                             <input
                                 type="text"
                                 name="username"
                                 placeholder="Your name"
-                                className="w-full px-4 py-3 rounded-lg bg-[#111] border border-purpleAccent/30 text-silver focus:outline-none focus:border-purpleAccent mb-4"
+                                className="w-full px-4 py-3 rounded-lg bg-white/10 border border-purple/30 text-white placeholder-white/50 focus:outline-none focus:border-purple mb-4"
                                 autoFocus
                             />
                             <button
                                 type="submit"
-                                className="w-full px-6 py-3 rounded-lg bg-purpleAccent text-black font-semibold hover:bg-purpleAccent/90 transition-colors"
+                                className="w-full px-6 py-3 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors"
                             >
                                 Join Room
                             </button>
@@ -127,8 +127,8 @@ export default function Room() {
             )}
 
             <div className="max-w-6xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-purpleAccent">
+                <div className="flex justify-between items-center mb-6 md:mb-8">
+                    <h1 className="text-2xl md:text-3xl font-bold text-purple">
                         Room: {id}
                     </h1>
                 </div>
@@ -136,16 +136,16 @@ export default function Room() {
                 {/* Message popup */}
                 {message.text && (
                     <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${message.type === 'error' ? 'bg-red-500' : 'bg-green-500'
-                        } text-white font-semibold`}>
+                        } text-white font-semibold max-w-xs md:max-w-md`}>
                         {message.text}
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                     {/* Left Column - Player and Controls */}
-                    <div className="space-y-6">
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Now Playing</h2>
+                    <div className="space-y-4 md:space-y-6">
+                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm">
+                            <h2 className="text-lg md:text-xl font-semibold mb-4 text-white">Now Playing</h2>
                             <YouTubePlayer
                                 videoId={currentSong?.videoId}
                                 onEnd={handleSongEnd}
@@ -159,9 +159,9 @@ export default function Room() {
                     </div>
 
                     {/* Right Column - Search and Queue */}
-                    <div className="space-y-6">
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Search Songs</h2>
+                    <div className="space-y-4 md:space-y-6">
+                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm">
+                            <h2 className="text-lg md:text-xl font-semibold mb-4 text-white">Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
 
                             {searchResults.length > 0 && (
@@ -169,20 +169,20 @@ export default function Room() {
                                     {searchResults.map((song) => (
                                         <div
                                             key={song.id.videoId}
-                                            className="p-3 bg-[#111] rounded-lg border border-purpleAccent/20 flex items-center gap-3 hover:border-purpleAccent/50 transition-colors"
+                                            className="p-3 bg-white/5 rounded-lg border border-purple/20 flex items-center gap-3 hover:border-purple/50 transition-colors backdrop-blur-sm"
                                         >
                                             <img
                                                 src={song.snippet.thumbnails.default.url}
                                                 alt={song.snippet.title}
-                                                className="w-12 h-12 rounded object-cover"
+                                                className="w-12 h-12 rounded object-cover flex-shrink-0"
                                             />
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-sm font-medium truncate">{song.snippet.title}</h3>
-                                                <p className="text-xs text-silver/60 truncate">{song.snippet.channelTitle}</p>
+                                                <h3 className="text-sm font-medium text-white truncate">{song.snippet.title}</h3>
+                                                <p className="text-xs text-white/60 truncate">{song.snippet.channelTitle}</p>
                                             </div>
                                             <button
                                                 onClick={() => addToQueue(song)}
-                                                className="px-3 py-1 text-sm rounded bg-purpleAccent text-black hover:bg-purpleAccent/90 transition-colors"
+                                                className="px-4 py-2 text-sm rounded bg-purple text-white hover:bg-purple/90 transition-colors font-medium flex-shrink-0 min-h-[40px]"
                                             >
                                                 Add
                                             </button>
@@ -192,8 +192,8 @@ export default function Room() {
                             )}
                         </div>
 
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Queue</h2>
+                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm">
+                            <h2 className="text-lg md:text-xl font-semibold mb-4 text-white">Queue</h2>
                             <QueueList queue={queue} />
                         </div>
                     </div>

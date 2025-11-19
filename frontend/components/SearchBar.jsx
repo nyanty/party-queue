@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export default function SearchBar({ onSearch }) {
     const [query, setQuery] = useState('');
 
@@ -24,11 +22,11 @@ export default function SearchBar({ onSearch }) {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search for a song..."
-                    className="flex-1 px-4 py-2 rounded-lg bg-[#111] border border-purpleAccent/30 text-silver focus:outline-none focus:border-purpleAccent"
+                    className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-purple/30 text-white placeholder-white/50 focus:outline-none focus:border-purple text-base"
                 />
                 <button
                     type="submit"
-                    className="px-6 py-2 rounded-lg bg-purpleAccent text-black font-semibold hover:bg-purpleAccent/90 transition-colors"
+                    className="px-6 py-3 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors text-base min-w-[80px]"
                 >
                     Search
                 </button>

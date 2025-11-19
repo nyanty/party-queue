@@ -5,7 +5,7 @@ export default function YouTubePlayer({ videoId, onEnd, onReady }) {
     const playerRef = useRef(null);
 
     const opts = {
-        height: '390',
+        height: '250',
         width: '100%',
         playerVars: {
             autoplay: 1,
@@ -23,14 +23,14 @@ export default function YouTubePlayer({ videoId, onEnd, onReady }) {
 
     if (!videoId) {
         return (
-            <div className="w-full aspect-video bg-[#111] rounded-lg border border-purpleAccent/30 flex items-center justify-center">
-                <p className="text-silver/60">No video playing</p>
+            <div className="w-full aspect-video bg-white/10 rounded-lg border border-purple/30 flex items-center justify-center">
+                <p className="text-white/60">No video playing</p>
             </div>
         );
     }
 
     return (
-        <div className="w-full rounded-lg overflow-hidden border border-purpleAccent/30">
+        <div className="w-full rounded-lg overflow-hidden border border-purple/30">
             <YouTube
                 videoId={videoId}
                 opts={opts}
