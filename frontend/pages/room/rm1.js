@@ -178,7 +178,7 @@ export default function Room() {
                             <h2 className="text-lg md:text-xl font-semibold mb-4 text-white">Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
 
-                            {searchResults.length > 0 ? (
+                            {searchResults && searchResults.length > 0 ? (
                                 <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
                                     {searchResults.map((song) => (
                                         <div
