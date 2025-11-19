@@ -1,0 +1,25 @@
+{
+    "name": "party-queue-frontend",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "next dev -p 3000",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "next": "13.4.12",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-qr-code": "2.0.6",
+        "react-youtube": "10.0.0",
+        "socket.io-client": "4.7.1",
+        "tailwindcss": "^3.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.10.1",
+        "@types/react": "^19.2.6",
+        "autoprefixer": "^10.4.22",
+        "postcss": "^8.5.6",
+        "typescript": "^5.9.3"
+    }
+}
