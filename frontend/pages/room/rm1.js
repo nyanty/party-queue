@@ -87,6 +87,7 @@ export default function Room() {
                 song: {
                     videoId: song.id.videoId,
                     title: song.snippet.title,
+                    thumbnail: song.snippet.thumbnails.medium?.url || song.snippet.thumbnails.default?.url,
                 },
                 isHost
             });
@@ -159,7 +160,7 @@ export default function Room() {
                     {/* Left Column - Player and Controls */}
                     <div className="space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#ffffff' }}>Now Playing</h2>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
                             <YouTubePlayer
                                 videoId={currentSong?.videoId}
                                 onEnd={handleSongEnd}
@@ -177,7 +178,7 @@ export default function Room() {
                     {/* Right Column - Search and Queue */}
                     <div className="space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#ffffff' }}>Search Songs</h2>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
 
                             {searchResults && searchResults.length > 0 ? (
@@ -219,7 +220,7 @@ export default function Room() {
                         </div>
 
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#ffffff' }}>Queue</h2>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
                             <QueueList queue={queue} />
                         </div>
                     </div>
