@@ -1,6 +1,14 @@
-export default function PlayerControls({ onVoteSkip, currentVotes, totalUsers }) {
+export default function PlayerControls({ onVoteSkip, onHostSkip, currentVotes, totalUsers, isHost }) {
     return (
         <div className="flex flex-col items-center gap-3 p-4">
+            {isHost && (
+                <button
+                    onClick={onHostSkip}
+                    className="px-6 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-base min-h-[48px] w-full max-w-xs"
+                >
+                    👑 Host Skip (Instant)
+                </button>
+            )}
             <button
                 onClick={onVoteSkip}
                 className="px-6 py-3 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors text-base min-h-[48px] w-full max-w-xs"

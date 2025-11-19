@@ -18,9 +18,15 @@ export default function Room() {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [username, setUsername] = useState('');
     const [showUsernamePrompt, setShowUsernamePrompt] = useState(true);
+    const [isHost, setIsHost] = useState(false);
 
     useEffect(() => {
         if (!id) return;
+
+        // Check if user is admin/host
+        const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+        const isAdmin = urlParams.get('admin') === 'true';
+        setIsHost(isAdmin);
 
         // Initialize socket connection
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
@@ -65,7 +71,7 @@ export default function Room() {
         setUsername(name.trim());
         setShowUsernamePrompt(false);
         if (socket) {
-            socket.emit('joinRoom', { roomId: id, username: name.trim(), isHost: false });
+            socket.emit('joinRoom', { roomId: id, username: name.trim(), isHost });
         }
     };
 
@@ -82,7 +88,7 @@ export default function Room() {
                     videoId: song.id.videoId,
                     title: song.snippet.title,
                 },
-                isHost: false
+                isHost
             });
         }
     };
@@ -90,6 +96,12 @@ export default function Room() {
     const handleVoteSkip = () => {
         if (socket && username) {
             socket.emit('voteSkip', { roomId: id, username });
+        }
+    };
+
+    const handleHostSkip = () => {
+        if (socket) {
+            socket.emit('hostSkip', { roomId: id });
         }
     };
 
@@ -129,7 +141,7 @@ export default function Room() {
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-6 md:mb-8">
                     <h1 className="text-2xl md:text-3xl font-bold text-purple">
-                        Room: {id}
+                        Room: {id} {isHost && <span className="text-sm bg-purple/20 px-2 py-1 rounded ml-2">👑 HOST</span>}
                     </h1>
                 </div>
 
@@ -152,8 +164,10 @@ export default function Room() {
                             />
                             <PlayerControls
                                 onVoteSkip={handleVoteSkip}
+                                onHostSkip={handleHostSkip}
                                 currentVotes={skipVotes.voters}
                                 totalUsers={skipVotes.userCount}
+                                isHost={isHost}
                             />
                         </div>
                     </div>

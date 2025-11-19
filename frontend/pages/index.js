@@ -30,12 +30,26 @@ export default function Home() {
 
 
                 {roomId && (
-                    <div className="mt-8 p-6 bg-white/5 rounded-2xl border border-purple/30 backdrop-blur-sm">
-                        <h2 className="text-lg md:text-xl font-semibold text-white">Scan to join</h2>
-                        <div className="mt-4 flex justify-center">
-                            <QRCode value={`${frontendUrl}/room/${roomId}`} />
+                    <div className="mt-8 space-y-6">
+                        {/* Regular User QR */}
+                        <div className="p-6 bg-white/5 rounded-2xl border border-purple/30 backdrop-blur-sm">
+                            <h2 className="text-lg md:text-xl font-semibold text-white mb-2">🎵 Regular Users - Scan to Join</h2>
+                            <p className="text-white/60 text-sm mb-4">Join the party and add songs to the queue</p>
+                            <div className="flex justify-center">
+                                <QRCode value={`${frontendUrl}/room/${roomId}`} />
+                            </div>
+                            <p className="mt-3 text-white/80 text-center">Room ID: <span className="text-purple font-semibold">{roomId}</span></p>
                         </div>
-                        <p className="mt-3 text-white/80 text-center">Room ID: <span className="text-purple font-semibold">{roomId}</span></p>
+
+                        {/* Admin QR */}
+                        <div className="p-6 bg-purple/10 rounded-2xl border border-purple/50 backdrop-blur-sm">
+                            <h2 className="text-lg md:text-xl font-semibold text-purple mb-2">👑 Admin/Host - Scan for Full Control</h2>
+                            <p className="text-purple/80 text-sm mb-4">Host controls: skip songs instantly, override limits, manage queue</p>
+                            <div className="flex justify-center">
+                                <QRCode value={`${frontendUrl}/room/${roomId}?admin=true`} />
+                            </div>
+                            <p className="mt-3 text-purple/80 text-center">Admin Link: <span className="text-white font-semibold">{roomId}?admin=true</span></p>
+                        </div>
                     </div>
                 )}
             </div>
