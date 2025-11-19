@@ -13,7 +13,7 @@ export default function Room() {
     const { id } = router.query;
     const [queue, setQueue] = useState([]);
     const [currentSong, setCurrentSong] = useState(null);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState(null);
     const [skipVotes, setSkipVotes] = useState({ voters: 0, userCount: 1 });
     const [message, setMessage] = useState({ text: '', type: '' });
     const [username, setUsername] = useState('');
@@ -178,21 +178,24 @@ export default function Room() {
                             <h2 className="text-lg md:text-xl font-semibold mb-4 text-white">Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
 
-                            {searchResults.length > 0 && (
+                            {searchResults.length > 0 ? (
                                 <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
                                     {searchResults.map((song) => (
                                         <div
                                             key={song.id.videoId}
-                                            className="p-3 bg-white/5 rounded-lg border border-purple/20 flex items-center gap-3 hover:border-purple/50 transition-colors backdrop-blur-sm"
+                                            className="p-3 bg-white/10 rounded-lg border border-purple/30 flex items-center gap-3 hover:border-purple/60 hover:bg-white/15 transition-colors"
                                         >
                                             <img
-                                                src={song.snippet.thumbnails.default.url}
+                                                src={song.snippet.thumbnails.medium?.url || song.snippet.thumbnails.default?.url}
                                                 alt={song.snippet.title}
-                                                className="w-12 h-12 rounded object-cover flex-shrink-0"
+                                                className="w-12 h-12 rounded object-cover flex-shrink-0 bg-white/20"
+                                                onError={(e) => {
+                                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjODg4Ii8+Cjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VDwvdGV4dD4KPHN2Zz4=';
+                                                }}
                                             />
                                             <div className="flex-1 min-w-0">
                                                 <h3 className="text-sm font-medium text-white truncate">{song.snippet.title}</h3>
-                                                <p className="text-xs text-white/60 truncate">{song.snippet.channelTitle}</p>
+                                                <p className="text-xs text-white/70 truncate">{song.snippet.channelTitle}</p>
                                             </div>
                                             <button
                                                 onClick={() => addToQueue(song)}
@@ -202,6 +205,10 @@ export default function Room() {
                                             </button>
                                         </div>
                                     ))}
+                                </div>
+                            ) : (
+                                <div className="mt-4 p-8 text-center text-white/50">
+                                    {searchResults === null ? 'Search for songs above' : 'No results found'}
                                 </div>
                             )}
                         </div>
