@@ -1,0 +1,13 @@
+# Render Blueprint for Backend Deployment
+
+services:
+  - type: web
+    name: party-queue-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: YOUTUBE_API_KEY
+        sync: false
