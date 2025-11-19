@@ -4,15 +4,15 @@ A collaborative music queue app for parties where guests can add songs, vote to 
 
 ## Features
 
-- 🎸 **Room-based system** - Create rooms with QR codes for easy joining
-- 🔍 **YouTube search** - Search and add any song from YouTube
-- 📊 **Smart queue** - Fair round-robin system that interleaves songs from different users
-- 🗳️ **Democratic skip voting** - 60% of users needed to skip a song
-- ⏱️ **30-minute no-repeat** - Prevents the same song from being played twice within 30 minutes
-- 📏 **Duration limits** - 15-minute max for non-host users
-- 👥 **10 songs per user** - Prevents queue hogging
-- ⚡ **Real-time updates** - All changes sync instantly via Socket.IO
-- 🎨 **Modern UI** - Beautiful dark theme with purple accents
+- **Room-based system** - Create rooms with QR codes for easy joining
+- **YouTube search** - Search and add any song from YouTube
+- **Smart queue** - Fair round-robin system that interleaves songs from different users
+- **Democratic skip voting** - 60% of users needed to skip a song
+- **30-minute no-repeat** - Prevents the same song from being played twice within 30 minutes
+- **Duration limits** - 15-minute max for non-host users
+- **10 songs per user** - Prevents queue hogging
+- **Real-time updates** - All changes sync instantly via Socket.IO
+- **Modern UI** - Beautiful dark theme with purple accents
 
 ## Tech Stack
 
