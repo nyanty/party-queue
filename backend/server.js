@@ -86,13 +86,6 @@ io.on('connection', (socket) => {
             ensureRoom(roomId);
             cleanupHistory(roomId);
 
-            // Check user's current song count (max 10 songs per user)
-            const userSongCount = rooms[roomId].getUserSongCount(username);
-            if (userSongCount >= 10 && !isHost) {
-                socket.emit('songRejected', { reason: 'You can only have up to 10 songs in the queue at a time.' });
-                return;
-            }
-
             // Check if song was played recently (30 minutes)
             const alreadyPlayed = songHistory[roomId].some((it) => it.videoId === song.videoId);
             if (alreadyPlayed && !isHost) {
@@ -124,7 +117,11 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
         } catch (err) {
             console.error('addSong error', err);
-            socket.emit('songRejected', { reason: 'Server error while adding song.' });
+            if (err.message.includes('10 songs')) {
+                socket.emit('songRejected', { reason: err.message });
+            } else {
+                socket.emit('songRejected', { reason: 'Server error while adding song.' });
+            }
         }
     });
 

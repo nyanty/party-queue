@@ -10,20 +10,20 @@ let socket;
 
 export default function Room() {
     const router = useRouter();
-    const { id } = router.query;
+    const { id, username: urlUsername, admin } = router.query;
     const [queue, setQueue] = useState([]);
     const [currentSong, setCurrentSong] = useState(null);
     const [searchResults, setSearchResults] = useState(null);
     const [skipVotes, setSkipVotes] = useState({ voters: 0, userCount: 1 });
     const [message, setMessage] = useState({ text: '', type: '' });
-    const [username, setUsername] = useState('');
-    const [showUsernamePrompt, setShowUsernamePrompt] = useState(true);
-    const [isHost, setIsHost] = useState(false);
+    const [username, setUsername] = useState(urlUsername || '');
+    const [showUsernamePrompt, setShowUsernamePrompt] = useState(!urlUsername);
+    const [isHost, setIsHost] = useState(admin === 'true');
 
     useEffect(() => {
         if (!id) return;
 
-        // Check if user is admin/host
+        // Check if user is admin/host from URL params
         const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
         const isAdmin = urlParams.get('admin') === 'true';
         setIsHost(isAdmin);
@@ -32,7 +32,10 @@ export default function Room() {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
         socket = io(backendUrl);
 
-        // Don't join room yet, wait for username
+        // Join room if username is available
+        if (username) {
+            socket.emit('joinRoom', { roomId: id, username, isHost });
+        }
 
         socket.on('queueUpdated', (updatedQueue) => {
             setQueue(updatedQueue);
@@ -59,7 +62,7 @@ export default function Room() {
         return () => {
             socket.disconnect();
         };
-    }, [id]);
+    }, [id, username]);
 
     const showMessage = (text, type) => {
         setMessage({ text, type });
@@ -187,21 +190,12 @@ export default function Room() {
                                     {searchResults.map((song) => (
                                         <div
                                             key={song.id.videoId}
-                                            className="p-3 bg-white/10 rounded-lg border border-purple/30 flex items-center gap-3 hover:border-purple/60 hover:bg-white/15 transition-colors"
-                                            style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(139, 92, 246, 0.3)' }}
+                                            className="p-4 bg-white/5 rounded-lg border border-purple/30 flex items-center justify-between hover:border-purple/50 transition-colors backdrop-blur-sm"
+                                            style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}
                                         >
-                                            <img
-                                                src={song.snippet.thumbnails.medium?.url || song.snippet.thumbnails.default?.url}
-                                                alt={song.snippet.title}
-                                                className="w-12 h-12 rounded object-cover flex-shrink-0 bg-white/20"
-                                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                                                onError={(e) => {
-                                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjODg4Ii8+Cjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VDwvdGV4dD4KPHN2Zz4=';
-                                                }}
-                                            />
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-sm font-medium truncate" style={{ color: '#ffffff' }}>{song.snippet.title}</h3>
-                                                <p className="text-xs truncate" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{song.snippet.channelTitle}</p>
+                                                <h3 className="font-semibold text-sm md:text-base truncate" style={{ color: '#ffffff' }}>{song.snippet.title}</h3>
+                                                <p className="text-xs truncate" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{song.snippet.channelTitle}</p>
                                             </div>
                                             <button
                                                 onClick={() => addToQueue(song)}
