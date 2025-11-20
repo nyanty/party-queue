@@ -34,7 +34,7 @@ export default function Home() {
                     <div className="mt-8 space-y-6">
                         {/* Regular User QR */}
                         <div className="p-6 rounded-2xl border backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-2" style={{ color: '#ffffff' }}>🎵 Regular Users - Scan to Join</h2>
+                            <h2 className="text-lg md:text-xl font-semibold mb-2" style={{ color: '#8b5cf6' }}>🎵 Regular Users - Scan to Join</h2>
                             <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Join the party and add songs to the queue</p>
                             <div className="flex justify-center">
                                 <div className="p-4 rounded-lg border-4" style={{ borderColor: '#8b5cf6', backgroundColor: '#ffffff' }}>

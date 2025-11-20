@@ -89,10 +89,10 @@ export default function Room() {
     };
 
     return (
-        <div className="min-h-screen p-8 bg-background text-silver">
+        <div className="min-h-screen p-8" style={{ backgroundColor: '#0d001a', color: '#ffffff' }}>
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-purpleAccent">
+                    <h1 className="text-3xl font-bold" style={{ color: '#8b5cf6' }}>
                         Room: {id}
                     </h1>
                 </div>
@@ -108,8 +108,8 @@ export default function Room() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Left Column - Player and Controls */}
                     <div className="space-y-6">
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Now Playing</h2>
+                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
                             <YouTubePlayer
                                 videoId={currentSong?.videoId}
                                 onEnd={handleSongEnd}
@@ -124,8 +124,8 @@ export default function Room() {
 
                     {/* Right Column - Search and Queue */}
                     <div className="space-y-6">
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Search Songs</h2>
+                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
 
                             {searchResults.length > 0 && (
@@ -151,8 +151,8 @@ export default function Room() {
                             )}
                         </div>
 
-                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6">
-                            <h2 className="text-xl font-semibold mb-4">Queue</h2>
+                        <div className="bg-[#0d0d0d] rounded-2xl border border-purpleAccent/30 p-6" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
                             <QueueList queue={queue} />
                         </div>
                     </div>
