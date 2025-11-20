@@ -27,6 +27,7 @@ export default function QueueList({ queue }) {
                         />
                         <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-sm md:text-base" style={{ color: '#ffffff' }}>{song.title}</h3>
+                            <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{song.artist}</p>
                             <div className="flex items-center gap-2 mt-1">
                                 <span className="text-xs bg-purple/20 text-purple px-2 py-1 rounded font-medium" style={{ backgroundColor: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6' }}>
                                     {song.user || 'Unknown'}

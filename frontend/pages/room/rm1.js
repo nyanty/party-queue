@@ -88,6 +88,7 @@ export default function Room() {
                     videoId: song.id.videoId,
                     title: song.snippet.title,
                     thumbnail: song.snippet.thumbnails.medium?.url || song.snippet.thumbnails.default?.url,
+                    artist: song.snippet.channelTitle,
                 },
                 isHost
             });
