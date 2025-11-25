@@ -66,14 +66,14 @@ console.log('---------------------------------------');
 console.log('10. Vote to Skip (Single User)');
 console.log('    - Play a song (add one if queue is empty)');
 console.log('    - Click "Vote to Skip Current Song" button');
-console.log('    ✓ Expected: Shows "1/1 votes (100% - need 60%)"');
+console.log('    ✓ Expected: Shows "1/1 votes (100% - need 75%)"');
 console.log('    ✓ Expected: Song skips, next song plays');
 console.log('    ✓ Expected: Green popup appears saying "Song skipped!"');
 console.log('');
 console.log('11. Vote to Skip (Multiple Users - Simulation)');
 console.log('    - Open room in 5 different browser tabs/windows');
 console.log('    - Have 3 users click "Vote to Skip"');
-console.log('    ✓ Expected: Vote count shows "3/5 votes (60% - need 60%)"');
+console.log('    ✓ Expected: Vote count shows "4/5 votes (80% - need 75%)"');
 console.log('    ✓ Expected: Song skips when threshold reached');
 console.log('');
 

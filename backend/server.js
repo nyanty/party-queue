@@ -2,7 +2,7 @@
 // Full backend server for Party Queue
 // - Express + Socket.IO
 // - In-memory rooms, queue manager, song history
-// - Enforces: 15-minute limit (host override), 30-minute no-repeat, skip voting (60%), host skip
+// - Enforces: 15-minute limit (host override), 30-minute no-repeat, skip voting (75%), host skip
 
 
 require('dotenv').config();
@@ -183,8 +183,8 @@ io.on('connection', (socket) => {
         const userCount = clients ? clients.size : 1;
         const voters = skipVotes[roomId].size;
 
-        // 60% threshold
-        if (voters / userCount >= 0.6) {
+        // 75% threshold
+        if (voters / userCount >= 0.75) {
             skipVotes[roomId].clear();
             io.to(roomId).emit('forceSkip');
         } else {

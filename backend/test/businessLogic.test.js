@@ -144,20 +144,20 @@ describe('User Song Limit (10 songs max)', () => {
     });
 });
 
-describe('Skip Voting (60% threshold)', () => {
-    it('should skip when 60% of users vote', () => {
-        const voters = 3;
+describe('Skip Voting (75% threshold)', () => {
+    it('should skip when 75% of users vote', () => {
+        const voters = 4;
         const totalUsers = 5;
-        const threshold = 0.6;
+        const threshold = 0.75;
 
         const shouldSkip = (voters / totalUsers) >= threshold;
         expect(shouldSkip).toBe(true);
     });
 
-    it('should not skip when less than 60% vote', () => {
-        const voters = 2;
+    it('should not skip when less than 75% vote', () => {
+        const voters = 3;
         const totalUsers = 5;
-        const threshold = 0.6;
+        const threshold = 0.75;
 
         const shouldSkip = (voters / totalUsers) >= threshold;
         expect(shouldSkip).toBe(false);
@@ -166,7 +166,7 @@ describe('Skip Voting (60% threshold)', () => {
     it('should skip immediately with 100% votes', () => {
         const voters = 5;
         const totalUsers = 5;
-        const threshold = 0.6;
+        const threshold = 0.75;
 
         const shouldSkip = (voters / totalUsers) >= threshold;
         expect(shouldSkip).toBe(true);
@@ -175,7 +175,7 @@ describe('Skip Voting (60% threshold)', () => {
     it('should handle single user (100%)', () => {
         const voters = 1;
         const totalUsers = 1;
-        const threshold = 0.6;
+        const threshold = 0.75;
 
         const shouldSkip = (voters / totalUsers) >= threshold;
         expect(shouldSkip).toBe(true);

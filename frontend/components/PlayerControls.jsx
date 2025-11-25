@@ -60,7 +60,7 @@ export default function PlayerControls({ onVoteSkip, onHostSkip, onPause, onPlay
             </button>
             {currentVotes !== undefined && totalUsers !== undefined && (
                 <p className="text-sm text-center" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                    {currentVotes}/{totalUsers} votes ({Math.round((currentVotes / totalUsers) * 100)}% - need 60%)
+                    {currentVotes}/{totalUsers} votes ({Math.round((currentVotes / totalUsers) * 100)}% - need 75%)
                 </p>
             )}
         </div>
