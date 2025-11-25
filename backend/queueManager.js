@@ -25,18 +25,29 @@ class QueueManager {
     rebuildQueue() {
         const pool = Object.entries(this.userQueues).map(([user, songs]) => ({ user, songs: [...songs] }));
         const result = [];
-
+        let lastPickedUser = null;
 
         while (pool.some((p) => p.songs.length > 0)) {
-            // pick the user with the most songs remaining (weighted by remaining)
-            pool.sort((a, b) => b.songs.length - a.songs.length);
-            const candidate = pool[0];
+            // Filter to users who still have songs
+            const available = pool.filter(p => p.songs.length > 0);
+            
+            if (available.length === 0) break;
+            
+            // If multiple users have the same number of songs, alternate to avoid favoring one user
+            const maxSongs = Math.max(...available.map(p => p.songs.length));
+            const candidates = available.filter(p => p.songs.length === maxSongs);
+            
+            let candidate;
+            if (candidates.length === 1) {
+                candidate = candidates[0];
+            } else {
+                // Multiple candidates with same count, pick one that's not the last picked user
+                candidate = candidates.find(c => c.user !== lastPickedUser) || candidates[0];
+            }
 
-
-            if (candidate.songs.length === 0) break;
             result.push({ user: candidate.user, ...candidate.songs.shift() });
+            lastPickedUser = candidate.user;
         }
-
 
         this.playbackQueue = result;
     }
