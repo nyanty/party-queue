@@ -1,4 +1,36 @@
-export default function PlayerControls({ onVoteSkip, onHostSkip, onPause, onPlay, isPlaying, currentVotes, totalUsers, isHost }) {
+export default function PlayerControls({ onVoteSkip, onHostSkip, onPause, onPlay, isPlaying, currentVotes, totalUsers, isHost, compact = false }) {
+    if (compact) {
+        return (
+            <div className="flex items-center gap-2">
+                {isHost && (
+                    <>
+                        <button
+                            onClick={isPlaying ? onPause : onPlay}
+                            className="px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors text-sm"
+                            style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
+                        >
+                            {isPlaying ? '⏸️' : '▶️'}
+                        </button>
+                        <button
+                            onClick={onHostSkip}
+                            className="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-sm"
+                            style={{ backgroundColor: '#dc2626', color: '#ffffff' }}
+                        >
+                            👑
+                        </button>
+                    </>
+                )}
+                <button
+                    onClick={onVoteSkip}
+                    className="px-4 py-2 rounded-lg bg-purple text-white font-semibold hover:bg-purple/90 transition-colors text-sm"
+                    style={{ backgroundColor: '#8b5cf6', color: '#ffffff' }}
+                >
+                    Vote Skip ({currentVotes || 0}/{totalUsers || 1})
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center gap-3 p-4">
             {isHost && (

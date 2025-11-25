@@ -188,16 +188,62 @@ export default function Room() {
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    {/* Queue */}
-                    <div className="order-2 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
+                    {/* Now Playing */}
+                    <div className="order-1 lg:col-span-2 space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
-                            <QueueList queue={queue} />
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg md:text-xl font-semibold" style={{ color: '#8b5cf6' }}>Now Playing</h2>
+                                <PlayerControls
+                                    onVoteSkip={handleVoteSkip}
+                                    onHostSkip={handleHostSkip}
+                                    onPause={handlePause}
+                                    onPlay={handlePlay}
+                                    isPlaying={isPlaying}
+                                    currentVotes={skipVotes.voters}
+                                    totalUsers={skipVotes.userCount}
+                                    isHost={isHost}
+                                    compact={true}
+                                />
+                            </div>
+                            
+                            {isHost ? (
+                                // Host sees the full video player
+                                <YouTubePlayer
+                                    videoId={currentSong?.videoId}
+                                    onEnd={handleSongEnd}
+                                    onStateChange={handlePlayerStateChange}
+                                    onPause={(fn) => pauseVideoRef.current = fn}
+                                    onPlay={(fn) => playVideoRef.current = fn}
+                                />
+                            ) : (
+                                // Non-hosts see just the song title
+                                <div>
+                                    {currentSong ? (
+                                        <div className="text-center">
+                                            <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ color: '#ffffff' }}>
+                                                {currentSong.title}
+                                            </h3>
+                                            <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                                                by {currentSong.artist || 'Unknown Artist'}
+                                            </p>
+                                            {currentSong.user && (
+                                                <p className="text-sm mt-1" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                                    Added by {currentSong.user}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center text-white/60" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                            No song currently playing
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     {/* Search */}
-                    <div className="order-1 lg:order-2 lg:col-span-1 space-y-4 md:space-y-6">
+                    <div className="order-2 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
                             <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
@@ -232,64 +278,20 @@ export default function Room() {
                         </div>
                     </div>
 
+                    {/* Queue */}
+                    <div className="order-3 lg:order-2 lg:col-span-1 space-y-4 md:space-y-6">
+                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
+                            <QueueList queue={queue} />
+                        </div>
+                    </div>
+
                     {/* History */}
-                    <div className="order-3 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
+                    <div className="order-4 lg:col-span-2 space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-gray-500/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(107, 114, 128, 0.3)' }}>
                             <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#6b7280' }}>Recently Played</h2>
                             <HistoryList history={history} />
                         </div>
-                    </div>
-                </div>
-
-                {/* Bottom Section - Now Playing */}
-                <div className="mt-8">
-                    <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                        <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
-                        
-                        {isHost ? (
-                            // Host sees the full video player
-                            <YouTubePlayer
-                                videoId={currentSong?.videoId}
-                                onEnd={handleSongEnd}
-                                onStateChange={handlePlayerStateChange}
-                                onPause={(fn) => pauseVideoRef.current = fn}
-                                onPlay={(fn) => playVideoRef.current = fn}
-                            />
-                        ) : (
-                            // Non-hosts see just the song title
-                            <div className="mb-4">
-                                {currentSong ? (
-                                    <div className="text-center">
-                                        <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ color: '#ffffff' }}>
-                                            {currentSong.title}
-                                        </h3>
-                                        <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                                            by {currentSong.artist || 'Unknown Artist'}
-                                        </p>
-                                        {currentSong.user && (
-                                            <p className="text-sm mt-1" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                                                Added by {currentSong.user}
-                                            </p>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-white/60" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                                        No song currently playing
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                        
-                        <PlayerControls
-                            onVoteSkip={handleVoteSkip}
-                            onHostSkip={handleHostSkip}
-                            onPause={handlePause}
-                            onPlay={handlePlay}
-                            isPlaying={isPlaying}
-                            currentVotes={skipVotes.voters}
-                            totalUsers={skipVotes.userCount}
-                            isHost={isHost}
-                        />
                     </div>
                 </div>
             </div>

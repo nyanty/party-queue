@@ -8,7 +8,7 @@ export default function QueueList({ queue }) {
     }
 
     return (
-        <div className="space-y-3">
+        <div className="max-h-96 overflow-y-auto space-y-3">
             {queue.map((song, index) => (
                 <div
                     key={song.id || index}
