@@ -126,15 +126,6 @@ io.on('connection', (socket) => {
                 io.to(roomId).emit('playSong', songWithDuration);
             }
 
-            // Add to history
-            songHistory[roomId].push({
-                videoId: song.videoId,
-                title: song.title,
-                artist: song.artist || 'Unknown Artist',
-                user: username,
-                timestamp: Date.now()
-            });
-
             // Broadcast updated queue
             io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
         } catch (err) {
