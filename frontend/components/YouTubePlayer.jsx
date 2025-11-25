@@ -5,6 +5,7 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
     const playerRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [playerReady, setPlayerReady] = useState(false);
+    const prevVideoIdRef = useRef(null);
 
     const opts = {
         height: '250',
@@ -40,6 +41,15 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
             playerRef.current.playVideo();
         }
     };
+
+    // Auto-play when videoId changes (new song)
+    useEffect(() => {
+        if (playerReady && videoId && videoId !== prevVideoIdRef.current && playerRef.current) {
+            // New video loaded, auto-play it
+            playerRef.current.playVideo();
+        }
+        prevVideoIdRef.current = videoId;
+    }, [videoId, playerReady]);
 
     // Expose functions to parent
     useEffect(() => {
