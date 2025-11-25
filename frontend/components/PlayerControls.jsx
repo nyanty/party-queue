@@ -1,14 +1,23 @@
-export default function PlayerControls({ onVoteSkip, onHostSkip, currentVotes, totalUsers, isHost }) {
+export default function PlayerControls({ onVoteSkip, onHostSkip, onPause, onPlay, isPlaying, currentVotes, totalUsers, isHost }) {
     return (
         <div className="flex flex-col items-center gap-3 p-4">
             {isHost && (
-                <button
-                    onClick={onHostSkip}
-                    className="px-6 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-base min-h-[48px] w-full max-w-xs"
-                    style={{ backgroundColor: '#dc2626', color: '#ffffff' }}
-                >
-                    👑 Host Skip (Instant)
-                </button>
+                <div className="flex gap-2 w-full max-w-xs">
+                    <button
+                        onClick={isPlaying ? onPause : onPlay}
+                        className="flex-1 px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors text-base min-h-[48px]"
+                        style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
+                    >
+                        {isPlaying ? '⏸️ Pause' : '▶️ Play'}
+                    </button>
+                    <button
+                        onClick={onHostSkip}
+                        className="flex-1 px-4 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-base min-h-[48px]"
+                        style={{ backgroundColor: '#dc2626', color: '#ffffff' }}
+                    >
+                        👑 Skip
+                    </button>
+                </div>
             )}
             <button
                 onClick={onVoteSkip}

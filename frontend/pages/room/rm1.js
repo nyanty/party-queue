@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import SearchBar from '../../components/SearchBar';
 import QueueList from '../../components/QueueList';
@@ -20,6 +20,9 @@ export default function Room() {
     const [username, setUsername] = useState(urlUsername || '');
     const [showUsernamePrompt, setShowUsernamePrompt] = useState(!urlUsername);
     const [isHost, setIsHost] = useState(admin === 'true');
+    const [isPlaying, setIsPlaying] = useState(false);
+    const pauseVideoRef = useRef(null);
+    const playVideoRef = useRef(null);
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -119,6 +122,22 @@ export default function Room() {
     const handleSongEnd = () => {
         if (socket) {
             socket.emit('requestNextSong', { roomId: id });
+        }
+    };
+
+    const handlePlayerStateChange = (playing) => {
+        setIsPlaying(playing);
+    };
+
+    const handlePause = () => {
+        if (pauseVideoRef.current) {
+            pauseVideoRef.current();
+        }
+    };
+
+    const handlePlay = () => {
+        if (playVideoRef.current) {
+            playVideoRef.current();
         }
     };
 
@@ -227,10 +246,16 @@ export default function Room() {
                         <YouTubePlayer
                             videoId={currentSong?.videoId}
                             onEnd={handleSongEnd}
+                            onStateChange={handlePlayerStateChange}
+                            onPause={(fn) => pauseVideoRef.current = fn}
+                            onPlay={(fn) => playVideoRef.current = fn}
                         />
                         <PlayerControls
                             onVoteSkip={handleVoteSkip}
                             onHostSkip={handleHostSkip}
+                            onPause={handlePause}
+                            onPlay={handlePlay}
+                            isPlaying={isPlaying}
                             currentVotes={skipVotes.voters}
                             totalUsers={skipVotes.userCount}
                             isHost={isHost}

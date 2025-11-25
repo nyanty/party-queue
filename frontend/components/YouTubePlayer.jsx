@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import YouTube from 'react-youtube';
 
-export default function YouTubePlayer({ videoId, onEnd, onReady }) {
+export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay, onStateChange: externalOnStateChange }) {
     const playerRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [playerReady, setPlayerReady] = useState(false);
@@ -28,8 +28,10 @@ export default function YouTubePlayer({ videoId, onEnd, onReady }) {
     const handleStateChange = (event) => {
         if (event.data === YouTube.PlayerState.PLAYING) {
             setIsPlaying(true);
+            if (externalOnStateChange) externalOnStateChange(true);
         } else if (event.data === YouTube.PlayerState.PAUSED || event.data === YouTube.PlayerState.ENDED) {
             setIsPlaying(false);
+            if (externalOnStateChange) externalOnStateChange(false);
         }
     };
 
@@ -38,6 +40,16 @@ export default function YouTubePlayer({ videoId, onEnd, onReady }) {
             playerRef.current.playVideo();
         }
     };
+
+    // Expose functions to parent
+    useEffect(() => {
+        if (onPause) onPause(() => {
+            if (playerRef.current) playerRef.current.pauseVideo();
+        });
+        if (onPlay) onPlay(() => {
+            if (playerRef.current) playerRef.current.playVideo();
+        });
+    }, [onPause, onPlay, playerReady]);
 
     if (!videoId) {
         return (
