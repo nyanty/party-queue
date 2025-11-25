@@ -119,6 +119,12 @@ io.on('connection', (socket) => {
             const songWithDuration = { ...song, duration: durationSec };
             rooms[roomId].addSong(username, songWithDuration);
 
+            // Start playing if this is the first song
+            if (!currentSong[roomId]) {
+                currentSong[roomId] = songWithDuration;
+                io.to(roomId).emit('playSong', songWithDuration);
+            }
+
             // Add to history
             songHistory[roomId].push({
                 videoId: song.videoId,
