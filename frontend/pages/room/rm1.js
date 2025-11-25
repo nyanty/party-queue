@@ -245,13 +245,41 @@ export default function Room() {
                 <div className="mt-8">
                     <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
                         <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
-                        <YouTubePlayer
-                            videoId={currentSong?.videoId}
-                            onEnd={handleSongEnd}
-                            onStateChange={handlePlayerStateChange}
-                            onPause={(fn) => pauseVideoRef.current = fn}
-                            onPlay={(fn) => playVideoRef.current = fn}
-                        />
+                        
+                        {isHost ? (
+                            // Host sees the full video player
+                            <YouTubePlayer
+                                videoId={currentSong?.videoId}
+                                onEnd={handleSongEnd}
+                                onStateChange={handlePlayerStateChange}
+                                onPause={(fn) => pauseVideoRef.current = fn}
+                                onPlay={(fn) => playVideoRef.current = fn}
+                            />
+                        ) : (
+                            // Non-hosts see just the song title
+                            <div className="mb-4">
+                                {currentSong ? (
+                                    <div className="text-center">
+                                        <h3 className="text-xl md:text-2xl font-bold mb-2" style={{ color: '#ffffff' }}>
+                                            {currentSong.title}
+                                        </h3>
+                                        <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                                            by {currentSong.artist || 'Unknown Artist'}
+                                        </p>
+                                        {currentSong.user && (
+                                            <p className="text-sm mt-1" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                                Added by {currentSong.user}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-white/60" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                        No song currently playing
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
                         <PlayerControls
                             onVoteSkip={handleVoteSkip}
                             onHostSkip={handleHostSkip}
