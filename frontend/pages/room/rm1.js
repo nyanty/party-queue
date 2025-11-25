@@ -58,6 +58,8 @@ export default function Room() {
         socket.on('forceSkip', () => {
             showMessage('Song skipped!', 'success');
             setSkipVotes({ voters: 0, userCount: 1 });
+            // Force skip to next song
+            handleSongEnd();
         });
 
         socket.on('songRejected', ({ reason }) => {
