@@ -82,7 +82,7 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
                         style={{ backgroundColor: '#8b5cf6' }}
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z"/>
+                            <path d="M8 5v14l11-7z" />
                         </svg>
                         Play
                     </button>

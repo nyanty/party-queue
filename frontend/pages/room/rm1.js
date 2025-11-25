@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import SearchBar from '../../components/SearchBar';
 import QueueList from '../../components/QueueList';
@@ -21,8 +21,6 @@ export default function Room() {
     const [showUsernamePrompt, setShowUsernamePrompt] = useState(!urlUsername);
     const [isHost, setIsHost] = useState(admin === 'true');
     const [isPlaying, setIsPlaying] = useState(false);
-    const pauseVideoRef = useRef(null);
-    const playVideoRef = useRef(null);
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -131,18 +129,6 @@ export default function Room() {
         setIsPlaying(playing);
     };
 
-    const handlePause = () => {
-        if (pauseVideoRef.current) {
-            pauseVideoRef.current();
-        }
-    };
-
-    const handlePlay = () => {
-        if (playVideoRef.current) {
-            playVideoRef.current();
-        }
-    };
-
     return (
         <div className="min-h-screen p-4 md:p-8" style={{ backgroundColor: '#0d001a', color: '#ffffff' }}>
             {/* Username Prompt Modal */}
@@ -196,8 +182,6 @@ export default function Room() {
                                 <PlayerControls
                                     onVoteSkip={handleVoteSkip}
                                     onHostSkip={handleHostSkip}
-                                    onPause={handlePause}
-                                    onPlay={handlePlay}
                                     isPlaying={isPlaying}
                                     currentVotes={skipVotes.voters}
                                     totalUsers={skipVotes.userCount}
@@ -205,15 +189,13 @@ export default function Room() {
                                     compact={true}
                                 />
                             </div>
-                            
+
                             {isHost ? (
                                 // Host sees the full video player
                                 <YouTubePlayer
                                     videoId={currentSong?.videoId}
                                     onEnd={handleSongEnd}
                                     onStateChange={handlePlayerStateChange}
-                                    onPause={(fn) => pauseVideoRef.current = fn}
-                                    onPlay={(fn) => playVideoRef.current = fn}
                                 />
                             ) : (
                                 // Non-hosts see just the song title

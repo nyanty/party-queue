@@ -30,13 +30,13 @@ class QueueManager {
         while (pool.some((p) => p.songs.length > 0)) {
             // Filter to users who still have songs
             const available = pool.filter(p => p.songs.length > 0);
-            
+
             if (available.length === 0) break;
-            
+
             // If multiple users have the same number of songs, alternate to avoid favoring one user
             const maxSongs = Math.max(...available.map(p => p.songs.length));
             const candidates = available.filter(p => p.songs.length === maxSongs);
-            
+
             let candidate;
             if (candidates.length === 1) {
                 candidate = candidates[0];
