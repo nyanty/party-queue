@@ -7,12 +7,13 @@ A collaborative music queue app for parties where guests can add songs, vote to 
 - **Room-based system** - Create rooms with QR codes for easy joining
 - **YouTube search** - Search and add any song from YouTube
 - **Smart queue** - Fair round-robin system that interleaves songs from different users
-- **Democratic skip voting** - 60% of users needed to skip a song
+- **Democratic skip voting** - 75% of users needed to skip a song
 - **30-minute no-repeat** - Prevents the same song from being played twice within 30 minutes
 - **Duration limits** - 15-minute max for non-host users
 - **10 songs per user** - Prevents queue hogging
 - **Real-time updates** - All changes sync instantly via Socket.IO
-- **Modern UI** - Beautiful dark theme with purple accents
+- **Role-based UI** - Hosts see video player, regular users see song info and voting controls
+- **Modern UI** - Beautiful dark theme with purple accents and responsive design
 
 ## Tech Stack
 
@@ -107,14 +108,18 @@ party-queue/
 ├── frontend/
 │   ├── pages/
 │   │   ├── index.js       # Home page (create room)
-│   │   ├── room/[id].js   # Room page (dynamic)
+│   │   ├── room/
+│   │   │   ├── [id].js    # Username entry page
+│   │   │   └── rm1.js     # Main room interface
 │   │   └── api/
 │   │       └── search.js  # YouTube search API
 │   ├── components/
 │   │   ├── SearchBar.jsx
 │   │   ├── QueueList.jsx
 │   │   ├── YouTubePlayer.jsx
-│   │   └── PlayerControls.jsx
+│   │   ├── PlayerControls.jsx
+│   │   ├── HistoryList.jsx
+│   │   └── ...
 │   ├── styles/
 │   │   └── globals.css
 │   └── package.json
@@ -130,23 +135,37 @@ party-queue/
 
 2. **Join a Room**
    - Scan QR code or visit `/room/[room-id]`
+   - Enter your username
 
 3. **Add Songs**
-   - Search for songs
+   - Search for songs in the search section
    - Click "Add" to add to queue
-   - Songs are interleaved fairly
+   - Songs are interleaved fairly between users
 
 4. **Skip Songs**
-   - Click "Vote to Skip Current Song"
-   - 60% of users needed to skip
+   - Click "Vote Skip" button next to the current song
+   - 75% of users needed to skip
+
+5. **Host Controls**
+   - Hosts see the full video player and can skip songs instantly
+   - Regular users see song title and voting controls only
+
+## Layout
+
+The room interface is organized as follows:
+- **Now Playing** (top) - Current song with inline voting controls
+- **Search** (left) - Search and add new songs
+- **Queue** (right) - Scrollable queue showing upcoming songs (5 at a time)
+- **History** (bottom) - Recently played songs
 
 ## Business Rules
 
 - ✅ Max 15 minutes per song (host can override)
 - ✅ 30-minute cooldown before repeating songs
 - ✅ Max 10 songs per user in queue
-- ✅ 60% vote required to skip
-- ✅ Host has override permissions
+- ✅ 75% vote required to skip
+- ✅ Host has override permissions (instant skip)
+- ✅ Role-based UI: hosts see video player, others see song info
 
 ## Environment Variables
 
