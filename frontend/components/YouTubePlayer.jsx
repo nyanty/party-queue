@@ -6,6 +6,7 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
     const [isPlaying, setIsPlaying] = useState(false);
     const [playerReady, setPlayerReady] = useState(false);
     const prevVideoIdRef = useRef(null);
+    const shouldAutoPlayRef = useRef(false);
 
     const opts = {
         height: '250',
@@ -33,6 +34,12 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
         } else if (event.data === YouTube.PlayerState.PAUSED || event.data === YouTube.PlayerState.ENDED) {
             setIsPlaying(false);
             if (externalOnStateChange) externalOnStateChange(false);
+        } else if (event.data === YouTube.PlayerState.CUED) {
+            // Video is loaded and ready, auto-play if this is a new song
+            if (shouldAutoPlayRef.current) {
+                playerRef.current.playVideo();
+                shouldAutoPlayRef.current = false;
+            }
         }
     };
 
@@ -42,24 +49,13 @@ export default function YouTubePlayer({ videoId, onEnd, onReady, onPause, onPlay
         }
     };
 
-    // Auto-play when videoId changes (new song)
+    // Update prevVideoId and set auto-play flag when videoId changes
     useEffect(() => {
-        if (playerReady && videoId && videoId !== prevVideoIdRef.current && playerRef.current) {
-            // New video loaded, auto-play it
-            playerRef.current.playVideo();
+        if (videoId !== prevVideoIdRef.current) {
+            shouldAutoPlayRef.current = true;
+            prevVideoIdRef.current = videoId;
         }
-        prevVideoIdRef.current = videoId;
-    }, [videoId, playerReady]);
-
-    // Expose functions to parent
-    useEffect(() => {
-        if (onPause) onPause(() => {
-            if (playerRef.current) playerRef.current.pauseVideo();
-        });
-        if (onPlay) onPlay(() => {
-            if (playerRef.current) playerRef.current.playVideo();
-        });
-    }, [onPause, onPlay, playerReady]);
+    }, [videoId]);
 
     if (!videoId) {
         return (
