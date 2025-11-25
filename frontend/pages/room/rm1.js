@@ -167,21 +167,16 @@ export default function Room() {
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    {/* Left Column - Queue and History */}
-                    <div className="space-y-4 md:space-y-6">
+                    {/* Queue */}
+                    <div className="order-2 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
                             <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
                             <QueueList queue={queue} />
                         </div>
-
-                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Recently Played</h2>
-                            <HistoryList history={history} />
-                        </div>
                     </div>
 
-                    {/* Right Column - Search */}
-                    <div className="space-y-4 md:space-y-6">
+                    {/* Search */}
+                    <div className="order-1 lg:order-2 lg:col-span-1 space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
                             <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Search Songs</h2>
                             <SearchBar onSearch={handleSearch} />
@@ -213,6 +208,14 @@ export default function Room() {
                                     {searchResults === null ? 'Search for songs above' : 'No results found'}
                                 </div>
                             )}
+                        </div>
+                    </div>
+
+                    {/* History */}
+                    <div className="order-3 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
+                        <div className="bg-white/5 rounded-2xl border border-gray-500/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(107, 114, 128, 0.3)' }}>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#6b7280' }}>Recently Played</h2>
+                            <HistoryList history={history} />
                         </div>
                     </div>
                 </div>

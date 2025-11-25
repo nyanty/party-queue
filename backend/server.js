@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         // Send current queue and simple room info
         socket.emit('queueUpdated', rooms[roomId].getQueue());
         socket.emit('roomInfo', { roomId, isHost: !!isHost });
-        
+
         // Send last 2 played songs
         const lastPlayed = songHistory[roomId].slice(-2);
         socket.emit('historyUpdated', lastPlayed);
@@ -115,12 +115,12 @@ io.on('connection', (socket) => {
             rooms[roomId].addSong(username, songWithDuration);
 
             // Add to history
-            songHistory[roomId].push({ 
-                videoId: song.videoId, 
+            songHistory[roomId].push({
+                videoId: song.videoId,
                 title: song.title,
                 artist: song.artist || 'Unknown Artist',
                 user: username,
-                timestamp: Date.now() 
+                timestamp: Date.now()
             });
 
             // Broadcast updated queue
@@ -139,26 +139,26 @@ io.on('connection', (socket) => {
     socket.on('requestNextSong', ({ roomId }) => {
         if (!rooms[roomId]) return;
         const next = rooms[roomId].popNext();
-        
+
         if (next) {
             // Add played song to history
-            songHistory[roomId].push({ 
-                videoId: next.videoId, 
+            songHistory[roomId].push({
+                videoId: next.videoId,
                 title: next.title,
                 artist: next.artist || 'Unknown Artist',
                 user: next.user,
-                timestamp: Date.now() 
+                timestamp: Date.now()
             });
-            
+
             // Keep only last 30 songs in history for memory
             if (songHistory[roomId].length > 30) {
                 songHistory[roomId] = songHistory[roomId].slice(-30);
             }
         }
-        
+
         io.to(roomId).emit('playSong', next || null);
         io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
-        
+
         // Send last 2 played songs
         const lastPlayed = songHistory[roomId].slice(-3).filter(song => song !== next).slice(-2);
         io.to(roomId).emit('historyUpdated', lastPlayed);

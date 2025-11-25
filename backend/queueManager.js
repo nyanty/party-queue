@@ -11,12 +11,12 @@ class QueueManager {
 
     addSong(username, song) {
         if (!this.userQueues[username]) this.userQueues[username] = [];
-        
+
         // Check if user has reached the 10 song limit
         if (this.userQueues[username].length >= 10) {
             throw new Error('You can only add up to 10 songs per user');
         }
-        
+
         this.userQueues[username].push(song);
         this.rebuildQueue();
     }
