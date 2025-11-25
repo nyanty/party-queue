@@ -141,16 +141,14 @@ io.on('connection', (socket) => {
     // requestNextSong: { roomId }
     socket.on('requestNextSong', ({ roomId }) => {
         if (!rooms[roomId]) return;
-        const next = rooms[roomId].popNext();
 
-        if (next) {
-            currentSong[roomId] = next;
-            // Add played song to history
+        // Add current song to history before moving to next
+        if (currentSong[roomId]) {
             songHistory[roomId].push({
-                videoId: next.videoId,
-                title: next.title,
-                artist: next.artist || 'Unknown Artist',
-                user: next.user,
+                videoId: currentSong[roomId].videoId,
+                title: currentSong[roomId].title,
+                artist: currentSong[roomId].artist || 'Unknown Artist',
+                user: currentSong[roomId].user,
                 timestamp: Date.now()
             });
 
@@ -158,6 +156,12 @@ io.on('connection', (socket) => {
             if (songHistory[roomId].length > 30) {
                 songHistory[roomId] = songHistory[roomId].slice(-30);
             }
+        }
+
+        const next = rooms[roomId].popNext();
+
+        if (next) {
+            currentSong[roomId] = next;
         } else {
             currentSong[roomId] = null;
         }
@@ -166,7 +170,7 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
 
         // Send last 2 played songs
-        const lastPlayed = songHistory[roomId].slice(-3).filter(song => song !== next).slice(-2);
+        const lastPlayed = songHistory[roomId].slice(-2);
         io.to(roomId).emit('historyUpdated', lastPlayed);
     });
 
