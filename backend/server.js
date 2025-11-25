@@ -30,6 +30,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 const rooms = {}; // roomId -> QueueManager
 const songHistory = {}; // roomId -> [{ videoId, title, artist, user, timestamp }]
 const skipVotes = {}; // roomId -> Set(username)
+const currentSong = {}; // roomId -> current playing song
 
 
 // Ensure room data structures exist
