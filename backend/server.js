@@ -28,7 +28,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 // In-memory stores (prototype)
 const rooms = {}; // roomId -> QueueManager
-const songHistory = {}; // roomId -> [{ videoId, timestamp }]
+const songHistory = {}; // roomId -> [{ videoId, title, artist, user, timestamp }]
 const skipVotes = {}; // roomId -> Set(username)
 
 
@@ -69,6 +69,10 @@ io.on('connection', (socket) => {
         // Send current queue and simple room info
         socket.emit('queueUpdated', rooms[roomId].getQueue());
         socket.emit('roomInfo', { roomId, isHost: !!isHost });
+        
+        // Send last 2 played songs
+        const lastPlayed = songHistory[roomId].slice(-2);
+        socket.emit('historyUpdated', lastPlayed);
 
 
         // Inform room about user list (socket ids) — clients can map to names if needed
@@ -111,7 +115,13 @@ io.on('connection', (socket) => {
             rooms[roomId].addSong(username, songWithDuration);
 
             // Add to history
-            songHistory[roomId].push({ videoId: song.videoId, timestamp: Date.now() });
+            songHistory[roomId].push({ 
+                videoId: song.videoId, 
+                title: song.title,
+                artist: song.artist || 'Unknown Artist',
+                user: username,
+                timestamp: Date.now() 
+            });
 
             // Broadcast updated queue
             io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
@@ -129,8 +139,29 @@ io.on('connection', (socket) => {
     socket.on('requestNextSong', ({ roomId }) => {
         if (!rooms[roomId]) return;
         const next = rooms[roomId].popNext();
+        
+        if (next) {
+            // Add played song to history
+            songHistory[roomId].push({ 
+                videoId: next.videoId, 
+                title: next.title,
+                artist: next.artist || 'Unknown Artist',
+                user: next.user,
+                timestamp: Date.now() 
+            });
+            
+            // Keep only last 30 songs in history for memory
+            if (songHistory[roomId].length > 30) {
+                songHistory[roomId] = songHistory[roomId].slice(-30);
+            }
+        }
+        
         io.to(roomId).emit('playSong', next || null);
         io.to(roomId).emit('queueUpdated', rooms[roomId].getQueue());
+        
+        // Send last 2 played songs
+        const lastPlayed = songHistory[roomId].slice(-3).filter(song => song !== next).slice(-2);
+        io.to(roomId).emit('historyUpdated', lastPlayed);
     });
 
     // voteSkip: { roomId, username }

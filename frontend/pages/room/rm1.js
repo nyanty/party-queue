@@ -5,6 +5,7 @@ import SearchBar from '../../components/SearchBar';
 import QueueList from '../../components/QueueList';
 import YouTubePlayer from '../../components/YouTubePlayer';
 import PlayerControls from '../../components/PlayerControls';
+import HistoryList from '../../components/HistoryList';
 
 let socket;
 
@@ -19,6 +20,7 @@ export default function Room() {
     const [username, setUsername] = useState(urlUsername || '');
     const [showUsernamePrompt, setShowUsernamePrompt] = useState(!urlUsername);
     const [isHost, setIsHost] = useState(admin === 'true');
+    const [history, setHistory] = useState([]);
 
     useEffect(() => {
         if (!id) return;
@@ -57,6 +59,10 @@ export default function Room() {
 
         socket.on('songRejected', ({ reason }) => {
             showMessage(reason, 'error');
+        });
+
+        socket.on('historyUpdated', (lastPlayed) => {
+            setHistory(lastPlayed);
         });
 
         return () => {
@@ -161,25 +167,20 @@ export default function Room() {
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    {/* Left Column - Player and Controls */}
+                    {/* Left Column - Queue and History */}
                     <div className="space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
-                            <YouTubePlayer
-                                videoId={currentSong?.videoId}
-                                onEnd={handleSongEnd}
-                            />
-                            <PlayerControls
-                                onVoteSkip={handleVoteSkip}
-                                onHostSkip={handleHostSkip}
-                                currentVotes={skipVotes.voters}
-                                totalUsers={skipVotes.userCount}
-                                isHost={isHost}
-                            />
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
+                            <QueueList queue={queue} />
+                        </div>
+
+                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Recently Played</h2>
+                            <HistoryList history={history} />
                         </div>
                     </div>
 
-                    {/* Right Column - Search and Queue */}
+                    {/* Right Column - Search */}
                     <div className="space-y-4 md:space-y-6">
                         <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
                             <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Search Songs</h2>
@@ -213,11 +214,24 @@ export default function Room() {
                                 </div>
                             )}
                         </div>
+                    </div>
+                </div>
 
-                        <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
-                            <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Queue</h2>
-                            <QueueList queue={queue} />
-                        </div>
+                {/* Bottom Section - Now Playing */}
+                <div className="mt-8">
+                    <div className="bg-white/5 rounded-2xl border border-purple/30 p-4 md:p-6 backdrop-blur-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+                        <h2 className="text-lg md:text-xl font-semibold mb-4" style={{ color: '#8b5cf6' }}>Now Playing</h2>
+                        <YouTubePlayer
+                            videoId={currentSong?.videoId}
+                            onEnd={handleSongEnd}
+                        />
+                        <PlayerControls
+                            onVoteSkip={handleVoteSkip}
+                            onHostSkip={handleHostSkip}
+                            currentVotes={skipVotes.voters}
+                            totalUsers={skipVotes.userCount}
+                            isHost={isHost}
+                        />
                     </div>
                 </div>
             </div>
