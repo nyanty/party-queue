@@ -1,24 +1,42 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import YouTube from 'react-youtube';
 
 export default function YouTubePlayer({ videoId, onEnd, onReady }) {
     const playerRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [playerReady, setPlayerReady] = useState(false);
 
     const opts = {
         height: '250',
         width: '100%',
         playerVars: {
-            autoplay: 1,
+            autoplay: 0, // Disable autoplay to comply with mobile restrictions
         },
     };
 
     const handleReady = (event) => {
         playerRef.current = event.target;
+        setPlayerReady(true);
         if (onReady) onReady(event);
     };
 
     const handleEnd = (event) => {
+        setIsPlaying(false);
         if (onEnd) onEnd(event);
+    };
+
+    const handleStateChange = (event) => {
+        if (event.data === YouTube.PlayerState.PLAYING) {
+            setIsPlaying(true);
+        } else if (event.data === YouTube.PlayerState.PAUSED || event.data === YouTube.PlayerState.ENDED) {
+            setIsPlaying(false);
+        }
+    };
+
+    const handlePlay = () => {
+        if (playerRef.current) {
+            playerRef.current.playVideo();
+        }
     };
 
     if (!videoId) {
@@ -30,13 +48,28 @@ export default function YouTubePlayer({ videoId, onEnd, onReady }) {
     }
 
     return (
-        <div className="w-full rounded-lg overflow-hidden border border-purple/30" style={{ borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+        <div className="w-full rounded-lg overflow-hidden border border-purple/30 relative" style={{ borderColor: 'rgba(139, 92, 246, 0.3)' }}>
             <YouTube
                 videoId={videoId}
                 opts={opts}
                 onReady={handleReady}
                 onEnd={handleEnd}
+                onStateChange={handleStateChange}
             />
+            {playerReady && !isPlaying && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <button
+                        onClick={handlePlay}
+                        className="bg-purple text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple/90 transition-colors flex items-center gap-2"
+                        style={{ backgroundColor: '#8b5cf6' }}
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Play
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
