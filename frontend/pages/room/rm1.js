@@ -238,9 +238,20 @@ export default function Room() {
                                             className="p-4 bg-white/5 rounded-lg border border-purple/30 flex items-center justify-between hover:border-purple/50 transition-colors backdrop-blur-sm"
                                             style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(139, 92, 246, 0.3)' }}
                                         >
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-sm md:text-base truncate" style={{ color: '#ffffff' }}>{song.snippet.title}</h3>
-                                                <p className="text-xs truncate" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{song.snippet.channelTitle}</p>
+                                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                <img
+                                                    src={song.snippet.thumbnails.medium?.url || song.snippet.thumbnails.default?.url}
+                                                    alt={song.snippet.title}
+                                                    className="w-12 h-12 rounded object-cover flex-shrink-0"
+                                                    onError={(e) => {
+                                                        e.target.src = song.snippet.thumbnails.default?.url || '';
+                                                        e.target.style.display = 'none';
+                                                    }}
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className="font-semibold text-sm md:text-base truncate" style={{ color: '#ffffff' }}>{song.snippet.title}</h3>
+                                                    <p className="text-xs truncate" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{song.snippet.channelTitle}</p>
+                                                </div>
                                             </div>
                                             <button
                                                 onClick={() => addToQueue(song)}
