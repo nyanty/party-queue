@@ -48,7 +48,18 @@ class QueueManager {
 
 
     popNext() {
-        return this.playbackQueue.shift();
+        const nextSong = this.playbackQueue.shift();
+        if (nextSong) {
+            // Remove the played song from the user's queue
+            const userQueue = this.userQueues[nextSong.user];
+            if (userQueue) {
+                const songIndex = userQueue.findIndex(song => song.videoId === nextSong.videoId);
+                if (songIndex !== -1) {
+                    userQueue.splice(songIndex, 1);
+                }
+            }
+        }
+        return nextSong;
     }
 
 
